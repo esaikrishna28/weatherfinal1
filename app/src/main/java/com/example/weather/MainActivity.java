@@ -16,8 +16,12 @@ import com.example.weather.weatherforecastmodel.NextDaysService;
 import com.example.weather.weatherforecastmodel.WeatherForecastResponse;
 import com.example.weather.weathermodel.CurrentWeatherResponse;
 import com.example.weather.weathermodel.WeatherService;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -37,12 +41,14 @@ public class MainActivity extends AppCompatActivity {
     private TextView lblWind;
     private TextView lblPressure;
     private RecyclerView rvNextDays;
+    private GraphView lcTemperature;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Map();
+        InitializeChart();
         FetchCurrentWeatherFromApi();
         FetchWeatherForecastFromApi();
 
@@ -63,6 +69,15 @@ public class MainActivity extends AppCompatActivity {
         lblWind = findViewById(R.id.lbl_wind);
         lblPressure = findViewById(R.id.lbl_pressure);
         rvNextDays = findViewById(R.id.rv_next_days);
+        lcTemperature = findViewById(R.id.lc_temperature);
+    }
+
+    private void InitializeChart() {
+        lcTemperature.setTitleColor(getColor(R.color.white));
+        lcTemperature.getGridLabelRenderer().setGridColor(getColor(R.color.white));
+        lcTemperature.getGridLabelRenderer().setHorizontalLabelsColor(getColor(R.color.white));
+        lcTemperature.getGridLabelRenderer().setVerticalLabelsColor(getColor(R.color.white));
+        lcTemperature.getGridLabelRenderer().setHighlightZeroLines(false);
     }
 
     private void CallApi() {
@@ -121,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
     private void UpdateStatus(CurrentWeatherResponse current) {
         Picasso.get().load("http://openweathermap.org/img/wn/" + current.getWeather().get(0).getIcon() + "@2x.png").into(ivStatus);
         lblTemperature.setText(String.format(getString(R.string.degree), current.getMain().getTemp().toString()));
-        lblStatus.setText(current.getWeather().get(0).getMain());
+        lblStatus.setText(current.getWeather().get(0).getMain() + " (" +current.getWeather().get(0).getDescription() + ")");
         lblHumidity.setText(String.format(getString(R.string.percentage), current.getMain().getHumidity().toString()));
         lblCloud.setText(String.format(getString(R.string.percentage), current.getClouds().getAll().toString()));
         lblWind.setText(String.format(getString(R.string.meter_per_sec), current.getWind().getSpeed().toString()));
@@ -141,5 +156,18 @@ public class MainActivity extends AppCompatActivity {
         rvNextDays.setLayoutManager(layoutManager);
         rvNextDays.setHasFixedSize(true);
         rvNextDays.setAdapter(new RecyclerViewAdapter(this, dailyWeatherList));
+
+        UpdateTemperatureChart(forecast);
+    }
+
+    private void UpdateTemperatureChart(WeatherForecastResponse forecast) {
+        DataPoint[] dataPointList = new DataPoint[forecast.getCnt()];
+        for (int i = 0; i < forecast.getCnt(); i++)
+            dataPointList[i] = new DataPoint(i, forecast.getList().get(i).getMain().getTemp());
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(dataPointList);
+        series.setColor(getColor(R.color.red_rose));
+        lcTemperature.removeAllSeries();
+        lcTemperature.setTitle("Temperature");
+        lcTemperature.addSeries(series);
     }
 }
