@@ -1,10 +1,19 @@
 <resources>
     <string name="app_name">weather-forecast</string>
     <string name="city">City</string>
-    <string name="hourly">Hourly</string>
+    <string name="hourly">Hourly (tap each one for further details)</string>
     <string name="degree" formatted="false">%1$s&#176;</string>
     <string name="percentage" formatted="false">%1$s\%%</string>
     <string name="meter_per_sec" formatted="false">%1$sm/s</string>
     <string name="h_pascal" formatted="false">%1$shPa</string>
     <string name="no_internet">Please turn on Wifi or mobile data</string>
+    <string name="humidity">Humidity</string>
+    <string name="cloud">Cloudiness</string>
+    <string name="wind">Wind speed</string>
+    <string name="pressure">Pressure</string>
+    <string name="search">Tap to search</string>
+    <string name="image_status">Status of current weather</string>
+    <string name="feel_likes">Feel likes</string>
+    <string name="temp_min">Temp. min</string>
+    <string name="temp_max">Temp. max</string>
 </resources>

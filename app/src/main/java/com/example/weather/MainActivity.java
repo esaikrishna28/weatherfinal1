@@ -5,7 +5,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,7 +25,6 @@ import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -30,6 +33,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
+
+    private Animation animFadeZoomOut;
+    private Animation animFadeOut;
+    private Animation animFadeIn;
 
     private EditText txtSearch;
     private ImageView ivSearch;
@@ -42,6 +49,17 @@ public class MainActivity extends AppCompatActivity {
     private TextView lblPressure;
     private RecyclerView rvNextDays;
     private GraphView lcTemperature;
+    private GridLayout glFurtherDetails;
+    private TextView lblDescription;
+    private TextView lblFeelLikes;
+    private TextView lblTempMin;
+    private TextView lblTempMax;
+    private TextView lblCloudiness;
+    private TextView lblHumidityDetail;
+    private TextView lblWindDetail;
+    private TextView lblPressureDetail;
+
+    private WeatherForecastResponse forecast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +74,37 @@ public class MainActivity extends AppCompatActivity {
             FetchCurrentWeatherFromApi();
             FetchWeatherForecastFromApi();
         });
+
+        rvNextDays.addOnItemTouchListener(
+                new RecyclerItemClickListener(MainActivity.this, rvNextDays, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        if (lcTemperature.getVisibility() == View.VISIBLE) {
+                            lcTemperature.startAnimation(animFadeZoomOut);
+                            lcTemperature.setVisibility(View.GONE);
+                            glFurtherDetails.setVisibility(View.VISIBLE);
+                            ShowWeatherForcastDetail(position);
+                        }
+                        else {
+                            glFurtherDetails.setAnimation(animFadeZoomOut);
+                            glFurtherDetails.setVisibility(View.GONE);
+                            lcTemperature.setVisibility(View.VISIBLE);
+                        }
+                    }
+
+                    @Override
+                    public void onLongItemClick(View view, int position) {
+                        // remain idle
+                    }
+                })
+        );
     }
 
     private void Map() {
+        animFadeZoomOut = AnimationUtils.loadAnimation(this, R.anim.fade_zoom_out_animation);
+        animFadeOut = AnimationUtils.loadAnimation(this, R.anim.fade_out_animation);
+        animFadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in_animation);
+
         txtSearch = findViewById(R.id.txt_search);
         ivSearch = findViewById(R.id.iv_search);
         ivStatus = findViewById(R.id.iv_status);
@@ -70,6 +116,15 @@ public class MainActivity extends AppCompatActivity {
         lblPressure = findViewById(R.id.lbl_pressure);
         rvNextDays = findViewById(R.id.rv_next_days);
         lcTemperature = findViewById(R.id.lc_temperature);
+        glFurtherDetails = findViewById(R.id.gl_further_details);
+        lblDescription = findViewById(R.id.lbl_description);
+        lblFeelLikes = findViewById(R.id.lbl_feel_likes_value);
+        lblTempMin = findViewById(R.id.lbl_temp_min_value);
+        lblTempMax = findViewById(R.id.lbl_temp_max_value);
+        lblCloudiness = findViewById(R.id.lbl_cloud_value);
+        lblHumidityDetail = findViewById(R.id.lbl_humidity_detail_value);
+        lblWindDetail = findViewById(R.id.lbl_wind_speed_detail_value);
+        lblPressureDetail = findViewById(R.id.lbl_pressure_detail_value);
     }
 
     private void InitializeChart() {
@@ -92,7 +147,6 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
                     }
                 });
-
     }
 
     private void FetchCurrentWeatherFromApi() {
@@ -120,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
                 .enqueue(new Callback<WeatherForecastResponse>() {
                     @Override
                     public void onResponse(Call<WeatherForecastResponse> call, Response<WeatherForecastResponse> response) {
-                        WeatherForecastResponse forecast = response.body();
+                        forecast = response.body();
                         if (forecast != null) {
                             UpdateForecast(forecast);
                         }
@@ -135,12 +189,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void UpdateStatus(CurrentWeatherResponse current) {
         Picasso.get().load("http://openweathermap.org/img/wn/" + current.getWeather().get(0).getIcon() + "@2x.png").into(ivStatus);
+        ivStatus.startAnimation(animFadeIn);
         lblTemperature.setText(String.format(getString(R.string.degree), current.getMain().getTemp().toString()));
+        lblTemperature.startAnimation(animFadeIn);
         lblStatus.setText(current.getWeather().get(0).getMain() + " (" +current.getWeather().get(0).getDescription() + ")");
+        lblStatus.startAnimation(animFadeIn);
         lblHumidity.setText(String.format(getString(R.string.percentage), current.getMain().getHumidity().toString()));
+        lblHumidity.startAnimation(animFadeIn);
         lblCloud.setText(String.format(getString(R.string.percentage), current.getClouds().getAll().toString()));
+        lblCloud.startAnimation(animFadeIn);
         lblWind.setText(String.format(getString(R.string.meter_per_sec), current.getWind().getSpeed().toString()));
+        lblWind.startAnimation(animFadeIn);
         lblPressure.setText(String.format(getString(R.string.h_pascal), current.getMain().getPressure().toString()));
+        lblPressure.startAnimation(animFadeIn);
     }
 
     private void UpdateForecast(WeatherForecastResponse forecast) {
@@ -157,6 +218,8 @@ public class MainActivity extends AppCompatActivity {
         rvNextDays.setHasFixedSize(true);
         rvNextDays.setAdapter(new RecyclerViewAdapter(this, dailyWeatherList));
 
+        rvNextDays.startAnimation(animFadeIn);
+
         UpdateTemperatureChart(forecast);
     }
 
@@ -169,5 +232,17 @@ public class MainActivity extends AppCompatActivity {
         lcTemperature.removeAllSeries();
         lcTemperature.setTitle("Temperature");
         lcTemperature.addSeries(series);
+        lcTemperature.startAnimation(animFadeIn);
+    }
+
+    private void ShowWeatherForcastDetail(int position) {
+        lblDescription.setText(forecast.getList().get(position).getWeather().get(0).getDescription());
+        lblFeelLikes.setText(String.format(getString(R.string.degree), forecast.getList().get(position).getMain().getFeelsLike().toString()));
+        lblTempMin.setText(String.format(getString(R.string.degree), forecast.getList().get(position).getMain().getTempMin().toString()));
+        lblTempMax.setText(String.format(getString(R.string.degree), forecast.getList().get(position).getMain().getTempMax().toString()));
+        lblCloudiness.setText(String.format(getString(R.string.percentage), forecast.getList().get(position).getClouds().getAll().toString()));
+        lblHumidityDetail.setText(String.format(getString(R.string.percentage), forecast.getList().get(position).getMain().getHumidity().toString()));
+        lblWindDetail.setText(String.format(getString(R.string.meter_per_sec), forecast.getList().get(position).getWind().getSpeed().toString()));
+        lblPressureDetail.setText(String.format(getString(R.string.h_pascal), forecast.getList().get(position).getMain().getPressure().toString()));
     }
 }
