@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">weather-forecast</string>
+    <string name="city">City</string>
+    <string name="hourly">Hourly</string>
+    <string name="degree" formatted="false">%1$s&#176;</string>
+    <string name="percentage" formatted="false">%1$s\%%</string>
+    <string name="meter_per_sec" formatted="false">%1$sm/s</string>
+    <string name="h_pascal" formatted="false">%1$shPa</string>
+    <string name="no_internet">Please turn on Wifi or mobile data</string>
+</resources>
