@@ -32,6 +32,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
+        // split time and date, set them to controls
         String[] splitter = dailyWeatherList.get(position).getDateTime().split(" ");
         String[] date = splitter[0].split("-");
         String[] time = splitter[1].split(":");

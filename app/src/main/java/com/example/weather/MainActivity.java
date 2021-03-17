@@ -60,15 +60,17 @@ public class MainActivity extends AppCompatActivity {
     private TextView lblPressureDetail;
 
     private WeatherForecastResponse forecast;
+    private int weatherPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Map();
+
+        Map();                          // map between graphical controls and programmatic ones
         InitializeChart();
-        FetchCurrentWeatherFromApi();
-        FetchWeatherForecastFromApi();
+        FetchCurrentWeatherFromApi();   // pull current weather from api and fill it in controls
+        FetchWeatherForecastFromApi();  // pull weather forecast from api and fill it in controls
 
         ivSearch.setOnClickListener(v ->{
             FetchCurrentWeatherFromApi();
@@ -79,28 +81,32 @@ public class MainActivity extends AppCompatActivity {
                 new RecyclerItemClickListener(MainActivity.this, rvNextDays, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        if (lcTemperature.getVisibility() == View.VISIBLE) {
+                        if (lcTemperature.getVisibility() == View.VISIBLE) { // if we are watching the temperature chart, switch to details
                             lcTemperature.startAnimation(animFadeZoomOut);
                             lcTemperature.setVisibility(View.GONE);
                             glFurtherDetails.setVisibility(View.VISIBLE);
-                            ShowWeatherForcastDetail(position);
                         }
                         else {
-                            glFurtherDetails.setAnimation(animFadeZoomOut);
-                            glFurtherDetails.setVisibility(View.GONE);
-                            lcTemperature.setVisibility(View.VISIBLE);
+                            if (weatherPosition != position) {  // if we are tapping another record (not a record again)
+                                ShowWeatherForcastDetail(position); // continue to show its details
+                            }
+                            else {  // tap again record (as previous), then switch back to chart
+                                glFurtherDetails.setAnimation(animFadeZoomOut);
+                                glFurtherDetails.setVisibility(View.GONE);
+                                lcTemperature.setVisibility(View.VISIBLE);
+                            }
                         }
                     }
 
                     @Override
-                    public void onLongItemClick(View view, int position) {
+                    public void onLongItemClick(View view, int position) {  // right now, there is no feature for this one
                         // remain idle
                     }
                 })
         );
     }
 
-    private void Map() {
+    private void Map() {    // map between graphical controls and programmatic ones
         animFadeZoomOut = AnimationUtils.loadAnimation(this, R.anim.fade_zoom_out_animation);
         animFadeOut = AnimationUtils.loadAnimation(this, R.anim.fade_out_animation);
         animFadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in_animation);
@@ -127,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
         lblPressureDetail = findViewById(R.id.lbl_pressure_detail_value);
     }
 
-    private void InitializeChart() {
+    private void InitializeChart() {    // set some initialized information for default
         lcTemperature.setTitleColor(getColor(R.color.white));
         lcTemperature.getGridLabelRenderer().setGridColor(getColor(R.color.white));
         lcTemperature.getGridLabelRenderer().setHorizontalLabelsColor(getColor(R.color.white));
@@ -149,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    private void FetchCurrentWeatherFromApi() {
+    private void FetchCurrentWeatherFromApi() { // get current weather from api
 
         WeatherService.weatherService.CurrentWeatherInformation(txtSearch.getText().toString(), "metric", "e52cee364ac0886a6d8878e7fbd3e679")
                 .enqueue(new Callback<CurrentWeatherResponse>() {
@@ -163,12 +169,12 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<CurrentWeatherResponse> call, Throwable t) {
                         Toast toast = Toast.makeText(MainActivity.this, getString(R.string.no_internet), Toast.LENGTH_LONG);
-                        toast.show();
+                        toast.show();   // need fix this field later
                     }
                 });
     }
 
-    private void FetchWeatherForecastFromApi() {
+    private void FetchWeatherForecastFromApi() {    // get weather forecast from api
 
         NextDaysService.nextDaysService.NextDaysForecast(txtSearch.getText().toString(), "metric", "e52cee364ac0886a6d8878e7fbd3e679")
                 .enqueue(new Callback<WeatherForecastResponse>() {
@@ -182,12 +188,12 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<WeatherForecastResponse> call, Throwable t) {
                         Toast toast = Toast.makeText(MainActivity.this, getString(R.string.no_internet), Toast.LENGTH_LONG);
-                        toast.show();
+                        toast.show();   // need fix this field later
                     }
                 });
     }
 
-    private void UpdateStatus(CurrentWeatherResponse current) {
+    private void UpdateStatus(CurrentWeatherResponse current) { // fill current weather data to controls
         Picasso.get().load("http://openweathermap.org/img/wn/" + current.getWeather().get(0).getIcon() + "@2x.png").into(ivStatus);
         ivStatus.startAnimation(animFadeIn);
         lblTemperature.setText(String.format(getString(R.string.degree), current.getMain().getTemp().toString()));
@@ -204,38 +210,38 @@ public class MainActivity extends AppCompatActivity {
         lblPressure.startAnimation(animFadeIn);
     }
 
-    private void UpdateForecast(WeatherForecastResponse forecast) {
+    private void UpdateForecast(WeatherForecastResponse forecast) { // fill data from data adapter to recycler view forecast
         List<DailyWeather> dailyWeatherList = new Vector<>();
         for (int i = 0; i < forecast.getCnt(); i++) {
             DailyWeather current = new DailyWeather(forecast.getList().get(i).getDtTxt(),
             "http://openweathermap.org/img/wn/" + forecast.getList().get(i).getWeather().get(0).getIcon() + ".png",
                     forecast.getList().get(i).getMain().getTemp(),
-                    forecast.getList().get(i).getWeather().get(0).getMain());
-            dailyWeatherList.add(current);
+                    forecast.getList().get(i).getWeather().get(0).getMain());   // get necessary data and fill into class Daily Weather (handmade model)
+            dailyWeatherList.add(current);  // add recent created instance to their list
         }
+        // create a new layout manager for recycler view, HORIZONTAL for more suitable
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        rvNextDays.setLayoutManager(layoutManager);
+        rvNextDays.setLayoutManager(layoutManager); // set that layout to recycler view
         rvNextDays.setHasFixedSize(true);
-        rvNextDays.setAdapter(new RecyclerViewAdapter(this, dailyWeatherList));
+        rvNextDays.setAdapter(new RecyclerViewAdapter(this, dailyWeatherList)); // officially fill data
+        rvNextDays.startAnimation(animFadeIn);  // animation
 
-        rvNextDays.startAnimation(animFadeIn);
-
-        UpdateTemperatureChart(forecast);
+        UpdateTemperatureChart(forecast);   // coincidentally update new temperature chart
     }
 
-    private void UpdateTemperatureChart(WeatherForecastResponse forecast) {
+    private void UpdateTemperatureChart(WeatherForecastResponse forecast) { // fill data to line chart
         DataPoint[] dataPointList = new DataPoint[forecast.getCnt()];
-        for (int i = 0; i < forecast.getCnt(); i++)
+        for (int i = 0; i < forecast.getCnt(); i++) // loop through weather forecast records to create an array as data source
             dataPointList[i] = new DataPoint(i, forecast.getList().get(i).getMain().getTemp());
         LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(dataPointList);
         series.setColor(getColor(R.color.red_rose));
-        lcTemperature.removeAllSeries();
-        lcTemperature.setTitle("Temperature");
-        lcTemperature.addSeries(series);
-        lcTemperature.startAnimation(animFadeIn);
+        lcTemperature.removeAllSeries();    // clear all data before fill new ones
+        lcTemperature.setTitle("Temperature");  // do not forget to set its title
+        lcTemperature.addSeries(series);    // fill data
+        lcTemperature.startAnimation(animFadeIn);   // an animation
     }
 
-    private void ShowWeatherForcastDetail(int position) {
+    private void ShowWeatherForcastDetail(int position) {   // when tap on each record of weather forecast recycler view
         lblDescription.setText(forecast.getList().get(position).getWeather().get(0).getDescription());
         lblFeelLikes.setText(String.format(getString(R.string.degree), forecast.getList().get(position).getMain().getFeelsLike().toString()));
         lblTempMin.setText(String.format(getString(R.string.degree), forecast.getList().get(position).getMain().getTempMin().toString()));
@@ -244,5 +250,7 @@ public class MainActivity extends AppCompatActivity {
         lblHumidityDetail.setText(String.format(getString(R.string.percentage), forecast.getList().get(position).getMain().getHumidity().toString()));
         lblWindDetail.setText(String.format(getString(R.string.meter_per_sec), forecast.getList().get(position).getWind().getSpeed().toString()));
         lblPressureDetail.setText(String.format(getString(R.string.h_pascal), forecast.getList().get(position).getMain().getPressure().toString()));
+        // save this one for using when switch between records, the details information just fades out when user tap on A RECORD TWICE
+        weatherPosition = position;
     }
 }
