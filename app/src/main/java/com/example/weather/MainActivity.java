@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView lblCloud;
     private TextView lblWind;
     private TextView lblPressure;
+    private TextView lblAirQuality;
     private RecyclerView rvNextDays;
     private GraphView lcTemperature;
     private GridLayout glFurtherDetails;
@@ -59,6 +60,15 @@ public class MainActivity extends AppCompatActivity {
     private TextView lblWindDetail;
     private TextView lblPressureDetail;
 
+//    private TextView lblCarbonOxide;
+//    private TextView lblNitrogenOxide;
+//    private TextView lblNitrogenDioxide;
+//    private TextView lblOzone;
+//    private TextView lblSulfurDiOxide;
+//    private TextView lblPm25;
+//    private TextView lblPm10;
+//    private TextView lblAmmonia;
+
     private WeatherForecastResponse forecast;
     private int weatherPosition;
 
@@ -66,6 +76,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+//        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+//        LayoutInflater inflater = MainActivity.this.getLayoutInflater();
+//
+//        builder.setTitle(getString(R.string.aqi))
+//                .setView(inflater.inflate(R.layout.air_pollution_dialog, null))
+//                .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int id) {
+//                        dialog.cancel();
+//                    }
+//                });
+//        alertDialog = builder.create();
 
         Map();                          // map between graphical controls and programmatic ones
         InitializeChart();
@@ -75,6 +98,8 @@ public class MainActivity extends AppCompatActivity {
         ivSearch.setOnClickListener(v ->{
             FetchCurrentWeatherFromApi();
             FetchWeatherForecastFromApi();
+            if (forecast != null)
+                FetchAirPollutionIndexFromApi(forecast.getCity().getCoord().getLat(), forecast.getCity().getCoord().getLon());
         });
 
         rvNextDays.addOnItemTouchListener(
@@ -85,10 +110,11 @@ public class MainActivity extends AppCompatActivity {
                             lcTemperature.startAnimation(animFadeZoomOut);
                             lcTemperature.setVisibility(View.GONE);
                             glFurtherDetails.setVisibility(View.VISIBLE);
+                            ShowWeatherForecastDetail(position);
                         }
                         else {
                             if (weatherPosition != position) {  // if we are tapping another record (not a record again)
-                                ShowWeatherForcastDetail(position); // continue to show its details
+                                ShowWeatherForecastDetail(position); // continue to show its details
                             }
                             else {  // tap again record (as previous), then switch back to chart
                                 glFurtherDetails.setAnimation(animFadeZoomOut);
@@ -97,7 +123,6 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     }
-
                     @Override
                     public void onLongItemClick(View view, int position) {  // right now, there is no feature for this one
                         // remain idle
@@ -120,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
         lblCloud = findViewById(R.id.lbl_cloud);
         lblWind = findViewById(R.id.lbl_wind);
         lblPressure = findViewById(R.id.lbl_pressure);
+        lblAirQuality = findViewById(R.id.lbl_air_pollution);
         rvNextDays = findViewById(R.id.rv_next_days);
         lcTemperature = findViewById(R.id.lc_temperature);
         glFurtherDetails = findViewById(R.id.gl_further_details);
@@ -131,6 +157,15 @@ public class MainActivity extends AppCompatActivity {
         lblHumidityDetail = findViewById(R.id.lbl_humidity_detail_value);
         lblWindDetail = findViewById(R.id.lbl_wind_speed_detail_value);
         lblPressureDetail = findViewById(R.id.lbl_pressure_detail_value);
+
+//        lblCarbonOxide = alertDialog.findViewById(R.id.lbl_carbon_oxide);
+//        lblNitrogenOxide = alertDialog.findViewById(R.id.lbl_nitrogen_oxide);
+//        lblNitrogenDioxide = alertDialog.findViewById(R.id.lbl_nitrogen_dioxide);
+//        lblOzone = alertDialog.findViewById(R.id.lbl_ozone);
+//        lblSulfurDiOxide = alertDialog.findViewById(R.id.lbl_sulfur_dioxide);
+//        lblPm25 = alertDialog.findViewById(R.id.lbl_pm_2_5);
+//        lblPm10 = alertDialog.findViewById(R.id.lbl_pm_10);
+//        lblAmmonia = alertDialog.findViewById(R.id.lbl_ammonia);
     }
 
     private void InitializeChart() {    // set some initialized information for default
@@ -139,20 +174,6 @@ public class MainActivity extends AppCompatActivity {
         lcTemperature.getGridLabelRenderer().setHorizontalLabelsColor(getColor(R.color.white));
         lcTemperature.getGridLabelRenderer().setVerticalLabelsColor(getColor(R.color.white));
         lcTemperature.getGridLabelRenderer().setHighlightZeroLines(false);
-    }
-
-    private void CallApi() {
-        AirService.airService.AirInformation(50, 50, "e52cee364ac0886a6d8878e7fbd3e679")
-                .enqueue(new Callback<AirResponse>() {
-                    @Override
-                    public void onResponse(Call<AirResponse> call, Response<AirResponse> response) {
-                        Toast.makeText(MainActivity.this, response.body().toString(), Toast.LENGTH_SHORT).show();
-                    }
-                    @Override
-                    public void onFailure(Call<AirResponse> call, Throwable t) {
-                        Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
-                    }
-                });
     }
 
     private void FetchCurrentWeatherFromApi() { // get current weather from api
@@ -168,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     @Override
                     public void onFailure(Call<CurrentWeatherResponse> call, Throwable t) {
-                        Toast toast = Toast.makeText(MainActivity.this, getString(R.string.no_internet), Toast.LENGTH_LONG);
+                        Toast toast = Toast.makeText(MainActivity.this, getString(R.string.no_internet), Toast.LENGTH_SHORT);
                         toast.show();   // need fix this field later
                     }
                 });
@@ -183,12 +204,32 @@ public class MainActivity extends AppCompatActivity {
                         forecast = response.body();
                         if (forecast != null) {
                             UpdateForecast(forecast);
+                            FetchAirPollutionIndexFromApi(forecast.getCity().getCoord().getLat(), forecast.getCity().getCoord().getLon());
                         }
                     }
                     @Override
                     public void onFailure(Call<WeatherForecastResponse> call, Throwable t) {
-                        Toast toast = Toast.makeText(MainActivity.this, getString(R.string.no_internet), Toast.LENGTH_LONG);
+                        Toast toast = Toast.makeText(MainActivity.this, getString(R.string.no_internet), Toast.LENGTH_SHORT);
                         toast.show();   // need fix this field later
+                    }
+                });
+    }
+
+    private void FetchAirPollutionIndexFromApi(double latitude, double longitude) { // fill aqi field (AIR QUALITY INDEX)
+
+        AirService.airService.AirInformation(latitude, longitude, "e52cee364ac0886a6d8878e7fbd3e679")
+                .enqueue(new Callback<AirResponse>() {
+                    @Override
+                    public void onResponse(Call<AirResponse> call, Response<AirResponse> response) {
+                        AirResponse airResponse = response.body();
+                        if (airResponse != null) {
+                            lblAirQuality.setText(String.format(getString(R.string.aqi_label), airResponse.getList().get(0).getMain().getAqi().toString()));
+                            lblAirQuality.setAnimation(animFadeIn);
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<AirResponse> call, Throwable t) {
+                        Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -241,7 +282,7 @@ public class MainActivity extends AppCompatActivity {
         lcTemperature.startAnimation(animFadeIn);   // an animation
     }
 
-    private void ShowWeatherForcastDetail(int position) {   // when tap on each record of weather forecast recycler view
+    private void ShowWeatherForecastDetail(int position) {   // when tap on each record of weather forecast recycler view
         lblDescription.setText(forecast.getList().get(position).getWeather().get(0).getDescription());
         lblFeelLikes.setText(String.format(getString(R.string.degree), forecast.getList().get(position).getMain().getFeelsLike().toString()));
         lblTempMin.setText(String.format(getString(R.string.degree), forecast.getList().get(position).getMain().getTempMin().toString()));

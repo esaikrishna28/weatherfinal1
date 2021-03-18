@@ -16,4 +16,16 @@
     <string name="feel_likes">Feel likes</string>
     <string name="temp_min">Temp. min</string>
     <string name="temp_max">Temp. max</string>
+    <string name="carbon_oxide">CO</string>
+    <string name="nitrogen_oxide">NO</string>
+    <string name="nitrogen_dioxide">NO2</string>
+    <string name="ozone">O3</string>
+    <string name="sulfur_dioxide">SO2</string>
+    <string name="particulate_matter_2_5">PM2.5</string>
+    <string name="particulate_matter_10">PM10</string>
+    <string name="ammonia">NH3</string>
+    <string name="microgram_per_meter_cube">&#181;/m3</string>
+    <string name="aqi">Air quality index</string>
+    <string name="ok">OK</string>
+    <string name="aqi_label">AQI: %1$s</string>
 </resources>

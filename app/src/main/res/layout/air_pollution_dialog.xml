@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_air_information"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="20dp"
+    android:paddingEnd="25dp"
+    android:paddingStart="25dp"
+    android:columnCount="4"
+    android:rowCount="4">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"
+        android:textColor="@color/grey_fossil"
+        android:textSize="17sp"
+        android:text="@string/carbon_oxide" />
+
+    <TextView
+        android:id="@+id/lbl_carbon_oxide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"
+        android:textColor="@color/grey_fossil"
+        android:textSize="17sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"
+        android:textColor="@color/grey_fossil"
+        android:textSize="17sp"
+        android:text="@string/sulfur_dioxide" />
+
+    <TextView
+        android:id="@+id/lbl_sunfur_dioxide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"
+        android:textColor="@color/grey_fossil"
+        android:textSize="17sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"
+        android:textColor="@color/grey_fossil"
+        android:textSize="17sp"
+        android:text="@string/nitrogen_oxide" />
+
+    <TextView
+        android:id="@+id/lbl_nitrogen_oxide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"
+        android:textColor="@color/grey_fossil"
+        android:textSize="17sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"
+        android:textColor="@color/grey_fossil"
+        android:textSize="17sp"
+        android:text="@string/particulate_matter_2_5" />
+
+    <TextView
+        android:id="@+id/lbl_pm_2_5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"
+        android:textColor="@color/grey_fossil"
+        android:textSize="17sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"
+        android:textColor="@color/grey_fossil"
+        android:textSize="17sp"
+        android:text="@string/nitrogen_dioxide" />
+
+    <TextView
+        android:id="@+id/lbl_nitrogen_dioxide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"
+        android:textColor="@color/grey_fossil"
+        android:textSize="17sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"
+        android:textColor="@color/grey_fossil"
+        android:textSize="17sp"
+        android:text="@string/particulate_matter_10" />
+
+    <TextView
+        android:id="@+id/lbl_pm_10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"
+        android:textColor="@color/grey_fossil"
+        android:textSize="17sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"
+        android:textColor="@color/grey_fossil"
+        android:textSize="17sp"
+        android:text="@string/ozone" />
+
+    <TextView
+        android:id="@+id/lbl_ozone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"
+        android:textColor="@color/grey_fossil"
+        android:textSize="17sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"
+        android:textColor="@color/grey_fossil"
+        android:textSize="17sp"
+        android:text="@string/ammonia" />
+
+    <TextView
+        android:id="@+id/lbl_ammonia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"
+        android:textColor="@color/grey_fossil"
+        android:textSize="17sp" />
+</GridLayout>
