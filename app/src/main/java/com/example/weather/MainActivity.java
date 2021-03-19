@@ -35,7 +35,6 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
     private Animation animFadeZoomOut;
-    private Animation animFadeOut;
     private Animation animFadeIn;
 
     private EditText txtSearch;
@@ -59,15 +58,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView lblHumidityDetail;
     private TextView lblWindDetail;
     private TextView lblPressureDetail;
-
-//    private TextView lblCarbonOxide;
-//    private TextView lblNitrogenOxide;
-//    private TextView lblNitrogenDioxide;
-//    private TextView lblOzone;
-//    private TextView lblSulfurDiOxide;
-//    private TextView lblPm25;
-//    private TextView lblPm10;
-//    private TextView lblAmmonia;
 
     private WeatherForecastResponse forecast;
     private int weatherPosition;
@@ -133,7 +123,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void Map() {    // map between graphical controls and programmatic ones
         animFadeZoomOut = AnimationUtils.loadAnimation(this, R.anim.fade_zoom_out_animation);
-        animFadeOut = AnimationUtils.loadAnimation(this, R.anim.fade_out_animation);
         animFadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in_animation);
 
         txtSearch = findViewById(R.id.txt_search);
@@ -157,15 +146,6 @@ public class MainActivity extends AppCompatActivity {
         lblHumidityDetail = findViewById(R.id.lbl_humidity_detail_value);
         lblWindDetail = findViewById(R.id.lbl_wind_speed_detail_value);
         lblPressureDetail = findViewById(R.id.lbl_pressure_detail_value);
-
-//        lblCarbonOxide = alertDialog.findViewById(R.id.lbl_carbon_oxide);
-//        lblNitrogenOxide = alertDialog.findViewById(R.id.lbl_nitrogen_oxide);
-//        lblNitrogenDioxide = alertDialog.findViewById(R.id.lbl_nitrogen_dioxide);
-//        lblOzone = alertDialog.findViewById(R.id.lbl_ozone);
-//        lblSulfurDiOxide = alertDialog.findViewById(R.id.lbl_sulfur_dioxide);
-//        lblPm25 = alertDialog.findViewById(R.id.lbl_pm_2_5);
-//        lblPm10 = alertDialog.findViewById(R.id.lbl_pm_10);
-//        lblAmmonia = alertDialog.findViewById(R.id.lbl_ammonia);
     }
 
     private void InitializeChart() {    // set some initialized information for default
