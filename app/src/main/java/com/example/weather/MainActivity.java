@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
             FetchCurrentWeatherFromApi();
             FetchWeatherForecastFromApi();
             if (forecast != null)
+                // Air Quality Index
                 FetchAirPollutionIndexFromApi(forecast.getCity().getCoord().getLat(), forecast.getCity().getCoord().getLon());
         });
 
