@@ -67,19 +67,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-//        LayoutInflater inflater = MainActivity.this.getLayoutInflater();
-//
-//        builder.setTitle(getString(R.string.aqi))
-//                .setView(inflater.inflate(R.layout.air_pollution_dialog, null))
-//                .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int id) {
-//                        dialog.cancel();
-//                    }
-//                });
-//        alertDialog = builder.create();
-
         Map();                          // map between graphical controls and programmatic ones
         InitializeChart();
         FetchCurrentWeatherFromApi();   // pull current weather from api and fill it in controls
