@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">weather-forecast</string>
+    <string name="app_name">Weather</string>
     <string name="city">City</string>
     <string name="hourly">Hourly (tap each one for further details)</string>
     <string name="degree" formatted="false">%1$s&#176;</string>
