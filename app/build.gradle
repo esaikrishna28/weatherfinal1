@@ -1,9 +1,10 @@
 plugins {
     id 'com.android.application'
+    id 'com.google.gms.google-services'
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 33
     buildToolsVersion "30.0.3"
 
     defaultConfig {
@@ -41,4 +42,8 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.jjoe64:graphview:4.2.2'
+    implementation platform('com.google.firebase:firebase-bom:32.1.1')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-firestore'
 }

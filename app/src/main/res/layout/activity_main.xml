@@ -230,12 +230,12 @@
         android:layout_width="match_parent"
         android:layout_height="160dp"
         android:layout_below="@id/lbl_next_days"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="10dp"
-        android:layout_marginStart="20dp"
-        android:padding="15dp"
-        android:background="@drawable/white_recycler_view_background" />
+        android:background="@drawable/white_recycler_view_background"
+        android:padding="15dp" />
 
     <RelativeLayout
         android:id="@+id/rl_details"
@@ -254,7 +254,7 @@
             android:id="@+id/lc_temperature"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="visible"/>
+            android:visibility="visible" />
 
         <GridLayout
             android:id="@+id/gl_further_details"

@@ -5,4 +5,5 @@
         android:startColor="@color/blue_water"
         android:endColor="@color/blue_azure"
         android:type="linear" />
+
 </shape>

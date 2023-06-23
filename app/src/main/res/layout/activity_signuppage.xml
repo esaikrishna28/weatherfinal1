@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".signuppage"
+    android:background="@drawable/blue_gradient_background">
+
+    <EditText
+        android:id="@+id/editTextTextPassword"
+        android:layout_width="300dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="76dp"
+        android:drawableStart="@drawable/ic_password"
+        android:drawablePadding="5dp"
+        android:ems="10"
+        android:hint="PASSWORD"
+        android:inputType="textPassword"
+        android:textColorHint="@color/white"
+
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/submit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.445"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextTextEmailAddress"
+        android:layout_width="300dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="44dp"
+        android:drawableStart="@drawable/ic_email"
+        android:drawablePadding="5dp"
+        android:ems="10"
+        android:hint="EMAIL:"
+        android:inputType="textEmailAddress"
+        android:textColorHint="@color/white"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/editTextTextPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.445"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.908" />
+
+    <Button
+        android:id="@+id/submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="204dp"
+        android:background="#0B0101"
+        android:shadowColor="#000000"
+        android:text="SUBMIT"
+        android:textSize="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.434"
+        app:layout_constraintStart_toStartOf="parent"
+        app:strokeColor="#000000" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
